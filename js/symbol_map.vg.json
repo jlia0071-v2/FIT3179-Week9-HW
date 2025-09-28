@@ -1,0 +1,54 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 700,
+  "height": 600,
+  "title": "Venues for Live Music in Melbourne",
+  "projection": {"type": "mercator"},
+  "layer": [
+    {
+      "data": {
+        "url": "data/MB_2016_VIC2.json",
+        "format": {"type": "topojson", "feature": "MB_2016_VIC"}
+      },
+      "mark": {"type": "geoshape", "fill": "#fafafa", "stroke": "#dcdcdc"}
+    },
+    {
+      "data": {
+        "url": "data/liveMusic_map.csv"
+      },
+      "mark": {"type": "point", "filled": true, "size": 60},  
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
+        "color": {
+          "field": "space_type",
+          "type": "nominal",
+          "title": "Space Type",
+          "scale": {
+            "domain": ["Performance space", "Casual Music Venues"],
+            "range": ["red", "lightblue"]
+          }
+        },
+        "shape": {
+          "field": "space_type",
+          "type": "nominal",
+          "scale": {
+            "domain": ["Performance space", "Casual Music Venues"],
+            "range": ["triangle", "circle"]
+          }
+        },
+        "tooltip": [
+          {"field": "venue_name"},
+          {"field": "venue_address"},
+          {"field": "space_type"}
+        ]
+      },
+      "transform": [
+        {
+          "calculate": "datum.space_type === 'Performance space' ? 'Performance space' : 'Casual Music Venues'",
+          "as": "space_type"
+        }
+      ]
+    }
+  ]
+}
